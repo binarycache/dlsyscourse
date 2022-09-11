@@ -150,7 +150,7 @@ def softmax_loss(Z, y):
         Average softmax loss over the sample.
     """
     ### BEGIN YOUR CODE
-    pass
+    return - np.mean(np.log(np.exp(Z[range(Z.shape[0]),y])/np.sum(np.exp(Z), axis=1)))
     ### END YOUR CODE
 
 
