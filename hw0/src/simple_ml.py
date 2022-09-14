@@ -149,8 +149,12 @@ def softmax_loss(Z, y):
     Returns:
         Average softmax loss over the sample.
     """
+    # Reference https://stackoverflow.com/questions/70202761/manually-computing-cross-entropy-loss-in-pytorch
     ### BEGIN YOUR CODE
-    return - np.mean(np.log(np.exp(Z[range(Z.shape[0]),y])/np.sum(np.exp(Z), axis=1)))
+    # simple log softmax 
+    # return - np.mean(np.log(np.exp(Z[range(Z.shape[0]),y])/np.sum(np.exp(Z), axis=1)))
+    # stable log-softmax without the need of division (so no divide by zero error)
+    return np.mean(np.log(np.sum(np.exp(Z),axis=1)) - Z[range(Z.shape[0]),y])
     ### END YOUR CODE
 
 
