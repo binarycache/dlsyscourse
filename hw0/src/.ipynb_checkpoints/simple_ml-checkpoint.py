@@ -120,7 +120,7 @@ def parse_mnist(image_filename, label_filename):
         train_labels = np.array(labels, dtype=np.uint8)
         return (train_images, train_labels)
     
-    if  "test" in image_filename:
+    if  "t10k" in image_filename:
         assert "t10k-labels" in label_filename, "Please pass labels for test images only."
         images = parse_images(image_filename)
         labels = parse_labels(label_filename)
@@ -177,7 +177,21 @@ def softmax_regression_epoch(X, y, theta, lr = 0.1, batch=100):
         None
     """
     ### BEGIN YOUR CODE
-    pass
+    if (X.shape[0]%batch):
+        n_iterations = X.shape[0]//batch + 1
+    else: 
+        n_iterations = X.shape[0]//batch
+
+    for i in range(n_iterations):
+        mini_batch = X[i*batch: i*batch + batch] # Take the batch out, batch_size x number of features
+        mini_batch_targets = y[i*batch: i*batch + batch]
+        output = np.matmul(mini_batch, theta) # batch_size x n_classes
+        z = np.exp(output)/np.sum(np.exp(output),axis=0) # normalize wrt rows, batch_size x n_classes
+        a = np.zeros((mini_batch_targets.size,y.max()+1))
+        a[range(mini_batch_targets.size),mini_batch_targets] = 1 # one-hot encoding; batch_size x n_classes
+        b = z - a
+        temp = np.matmul(mini_batch.T, b) 
+        theta -= lr * temp # modifying in-place, n_features x n_classes
     ### END YOUR CODE
 
 
